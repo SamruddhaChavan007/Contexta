@@ -39,7 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.contexta.R
-import com.example.contexta.auth.state.AuthState
+import com.example.contexta.auth.state.AuthField
+import com.example.contexta.auth.state.AuthUiState
 import com.example.contexta.ui.components.AppButton
 import com.example.contexta.ui.components.AuthPasswordField
 import com.example.contexta.ui.components.AuthTextField
@@ -50,10 +51,11 @@ import com.example.contexta.ui.theme.robotoFontFamily
 
 @Composable
 fun SignUpScreen(
-    authState: AuthState,
+    uiState: AuthUiState,
     onSignUp: (email: String, password: String, fullName: String) -> Unit,
     onSignUpWithGoogle: () -> Unit,
-    onNavigateToSignIn: () -> Unit
+    onNavigateToSignIn: () -> Unit,
+    onClearError: () -> Unit
 ) {
     val colors = MaterialTheme.googleColors
 
@@ -61,7 +63,7 @@ fun SignUpScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val isLoading = authState is AuthState.Loading
+    val isLoading = uiState is AuthUiState.Loading
 
     Scaffold { it ->
         Column(
@@ -130,10 +132,25 @@ fun SignUpScreen(
 
                 AuthTextField(
                     value = fullName,
-                    onValueChange = { fullName = it },
+                    onValueChange = {
+                        fullName = it
+                        if (uiState is AuthUiState.ValidationError || uiState is AuthUiState.AuthError) {
+                            onClearError()
+                        }
+                    },
                     hint = "John Doe",
                     leadingIcon = Icons.Default.Person
                 )
+
+                if (uiState is AuthUiState.ValidationError && uiState.field == AuthField.FULL_NAME) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = uiState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        fontFamily = manropeFontFamily,
+                        fontSize = 12.sp
+                    )
+                }
 
                 Spacer(Modifier.height(18.dp))
 
@@ -149,10 +166,25 @@ fun SignUpScreen(
 
                 AuthTextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = {
+                        email = it
+                        if (uiState is AuthUiState.ValidationError || uiState is AuthUiState.AuthError) {
+                            onClearError()
+                        }
+                    },
                     hint = "name@company.com",
                     leadingIcon = Icons.Default.Email
                 )
+
+                if (uiState is AuthUiState.ValidationError && uiState.field == AuthField.EMAIL) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = uiState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        fontFamily = manropeFontFamily,
+                        fontSize = 12.sp
+                    )
+                }
 
                 Spacer(Modifier.height(18.dp))
 
@@ -168,16 +200,31 @@ fun SignUpScreen(
 
                 AuthPasswordField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = {
+                        password = it
+                        if (uiState is AuthUiState.ValidationError || uiState is AuthUiState.AuthError) {
+                            onClearError()
+                        }
+                    },
                     hint = "Enter your password",
                     leadingIcon = Icons.Default.Lock
                 )
 
+                if (uiState is AuthUiState.ValidationError && uiState.field == AuthField.PASSWORD) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = uiState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        fontFamily = manropeFontFamily,
+                        fontSize = 12.sp
+                    )
+                }
+
                 Spacer(Modifier.height(18.dp))
 
-                if (authState is AuthState.Error) {
+                if (uiState is AuthUiState.AuthError) {
                     Text(
-                        text = authState.message,
+                        text = uiState.message,
                         color = MaterialTheme.colorScheme.error,
                         fontFamily = manropeFontFamily,
                         fontSize = 12.sp
@@ -299,10 +346,11 @@ fun SignUpScreen(
 fun Preview_SignUpScreen() {
     ContextaTheme(dynamicColor = false) {
         SignUpScreen(
-            authState = AuthState.Unauthenticated,
+            uiState = AuthUiState.Idle,
             onSignUp = { _, _, _ -> },
             onSignUpWithGoogle = {},
-            onNavigateToSignIn = {}
+            onNavigateToSignIn = {},
+            onClearError = {}
         )
     }
 }

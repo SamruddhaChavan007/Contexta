@@ -38,7 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.contexta.R
-import com.example.contexta.auth.state.AuthState
+import com.example.contexta.auth.state.AuthField
+import com.example.contexta.auth.state.AuthUiState
 import com.example.contexta.ui.components.AppButton
 import com.example.contexta.ui.components.AuthPasswordField
 import com.example.contexta.ui.components.AuthTextField
@@ -49,17 +50,18 @@ import com.example.contexta.ui.theme.robotoFontFamily
 
 @Composable
 fun SignInScreen(
-    authState: AuthState,
+    uiState: AuthUiState,
     onSignIn: (email: String, password: String) -> Unit,
     onSignInWithGoogle: () -> Unit,
-    onNavigateToSignUp: () -> Unit
+    onNavigateToSignUp: () -> Unit,
+    onClearError: () -> Unit
 ) {
     val colors = MaterialTheme.googleColors
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val isLoading = authState is AuthState.Loading
+    val isLoading = uiState is AuthUiState.Loading
 
     Scaffold { it ->
         Column(
@@ -128,10 +130,25 @@ fun SignInScreen(
 
                 AuthTextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = {
+                        email = it
+                        if (uiState is AuthUiState.ValidationError || uiState is AuthUiState.AuthError) {
+                            onClearError()
+                        }
+                    },
                     hint = "name@company.com",
                     leadingIcon = Icons.Default.Email
                 )
+
+                if (uiState is AuthUiState.ValidationError && uiState.field == AuthField.EMAIL) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = uiState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        fontFamily = manropeFontFamily,
+                        fontSize = 12.sp
+                    )
+                }
 
                 Spacer(Modifier.height(18.dp))
 
@@ -147,16 +164,31 @@ fun SignInScreen(
 
                 AuthPasswordField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = {
+                        password = it
+                        if (uiState is AuthUiState.ValidationError || uiState is AuthUiState.AuthError) {
+                            onClearError()
+                        }
+                    },
                     hint = "Enter your password",
                     leadingIcon = Icons.Default.Lock
                 )
 
+                if (uiState is AuthUiState.ValidationError && uiState.field == AuthField.PASSWORD) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = uiState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        fontFamily = manropeFontFamily,
+                        fontSize = 12.sp
+                    )
+                }
+
                 Spacer(Modifier.height(18.dp))
 
-                if (authState is AuthState.Error) {
+                if (uiState is AuthUiState.AuthError) {
                     Text(
-                        text = authState.message,
+                        text = uiState.message,
                         color = MaterialTheme.colorScheme.error,
                         fontFamily = manropeFontFamily,
                         fontSize = 12.sp
@@ -278,10 +310,11 @@ fun SignInScreen(
 fun Preview_SignInScreen() {
     ContextaTheme(dynamicColor = false) {
         SignInScreen(
-            authState = AuthState.Unauthenticated,
+            uiState = AuthUiState.Idle,
             onSignIn = { _, _ -> },
             onSignInWithGoogle = {},
-            onNavigateToSignUp = {}
+            onNavigateToSignUp = {},
+            onClearError = {}
         )
     }
 }

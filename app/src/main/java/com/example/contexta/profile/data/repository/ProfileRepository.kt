@@ -1,6 +1,5 @@
 package com.example.contexta.profile.data.repository
 
-import android.provider.ContactsContract
 import com.example.contexta.profile.data.model.Profile
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth

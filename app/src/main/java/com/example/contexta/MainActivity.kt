@@ -12,7 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.example.contexta.auth.state.AuthState
+import com.example.contexta.auth.state.SessionState
 import com.example.contexta.auth.viewmodel.AuthViewModel
 import com.example.contexta.navigation.NavGraph
 import com.example.contexta.ui.theme.ContextaTheme
@@ -32,8 +32,12 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
+        lifecycleScope.launch {
+            supabaseClient.handleDeeplinks(intent)
+        }
+
         splashScreen.setKeepOnScreenCondition {
-            authViewModel.uiState.value is AuthState.Loading
+            authViewModel.sessionState.value is SessionState.Unknown
         }
 
         splashScreen.setOnExitAnimationListener { splashScreenView ->
