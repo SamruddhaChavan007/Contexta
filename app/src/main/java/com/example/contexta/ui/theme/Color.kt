@@ -12,11 +12,13 @@ val Pink40 = Color(0xFF7D5260)
 
 val Primary = Color(0xFF00B4D8)
 
-val Secondary = Color(0xFFFF007A)
+val Secondary = Color(0xFF005E9F)
 
-val Tertiary = Color(0xFFFFD600)
+val Tertiary = Color(0xFFD81B60)
 
 val Neutral = Color(0xFFF8F9FA)
+
+val ExecutiveBlue = Color(0xFF005E9F)
 
 val CyanBlue = Color(0xFF0081C9)
 
