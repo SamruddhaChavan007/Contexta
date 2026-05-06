@@ -171,20 +171,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
-        viewModelScope.launch {
-            // Fix #4: handle logout failure and surface error to the user
-            try {
-                authRepository.logout()
-            } catch (e: Exception) {
-                _uiState.value = AuthUiState.AuthError(
-                    AuthErrorType.UNKNOWN,
-                    "Sign out failed. Please try again."
-                )
-            }
-        }
-    }
-
     fun clearError() {
         // Fix #7: only emit if not already Idle to avoid unnecessary recompositions
         if (_uiState.value !is AuthUiState.Idle) {

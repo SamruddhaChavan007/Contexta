@@ -10,11 +10,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,23 +36,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.contexta.moreoptions.viewmodel.MoreOptionsViewModel
 import com.example.contexta.ui.components.ThemeChangeRow
+import com.example.contexta.ui.components.UserCard
 import com.example.contexta.ui.theme.manropeFontFamily
 
 @Composable
 fun MoreOptionsScreen(
     onClose: () -> Unit,
+    onLogout: () -> Unit,
     viewModel: MoreOptionsViewModel = hiltViewModel()
 ) {
     BackHandler { onClose() }
 
     val themePreference by viewModel.themePreference.collectAsStateWithLifecycle()
+    val profile by viewModel.profile.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
             .background(MaterialTheme.colorScheme.surface)
             .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(8.dp)
     ) {
         // Top bar with back button
         Row(
@@ -75,6 +83,18 @@ fun MoreOptionsScreen(
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
+
+        HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
+
+        Spacer(Modifier.height(16.dp))
+
+        // User info section
+        UserCard(
+            username = profile?.fullName ?: "—",
+            useremail = profile?.email ?: "—"
+        )
+
+        Spacer(Modifier.height(16.dp))
 
         HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
 
@@ -105,8 +125,33 @@ fun MoreOptionsScreen(
             }
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 24.dp),
-                color = Color.White.copy(alpha = 0.12f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
             )
         }
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onLogout() }
+                .padding(horizontal = 24.dp, vertical = 18.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Logout,
+                contentDescription = "Log out",
+                tint = Color.Red
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = "Logout",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontFamily = manropeFontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        )
     }
 }

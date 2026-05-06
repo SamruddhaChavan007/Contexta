@@ -1,10 +1,9 @@
-package com.example.contexta.ui.components
+package com.example.contexta.ui.transitions
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -61,7 +60,7 @@ private class CircularRevealShape(
     ): Outline {
         val maxRadius = sqrt(
             max(origin.x, size.width - origin.x).pow(2) +
-            max(origin.y, size.height - origin.y).pow(2)
+                    max(origin.y, size.height - origin.y).pow(2)
         )
         val path = Path().apply {
             addOval(Rect(center = origin, radius = maxRadius * fraction))

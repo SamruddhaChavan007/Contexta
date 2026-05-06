@@ -5,7 +5,6 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -30,13 +29,12 @@ import com.example.contexta.navigation.model.DrawerItem
 import com.example.contexta.navigation.model.navigationItems
 import com.example.contexta.ui.components.AppNavigationDrawer
 import com.example.contexta.ui.components.BottomNavigationBar
-import com.example.contexta.ui.components.CircularRevealLayout
+import com.example.contexta.ui.transitions.CircularRevealLayout
 import com.example.contexta.ui.components.TopApplicationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val viewModel: MainViewModel = hiltViewModel()
+fun MainScreen(onLogout: () -> Unit) {
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -51,9 +49,7 @@ fun MainScreen() {
         activity?.finish()
     }
 
-    val drawerItems = listOf(
-        DrawerItem(label = "Log Out", onClick = { viewModel.logout() })
-    )
+    val drawerItems = emptyList<DrawerItem>()
 
     AppNavigationDrawer(
         drawerState = drawerState,
@@ -87,7 +83,7 @@ fun MainScreen() {
                 revealFrom = moreVertCenter,
                 modifier = Modifier.fillMaxSize()
             ) {
-                MoreOptionsScreen(onClose = { isMoreOptionsOpen = false })
+                MoreOptionsScreen(onClose = { isMoreOptionsOpen = false }, onLogout = onLogout)
             }
         }
     }

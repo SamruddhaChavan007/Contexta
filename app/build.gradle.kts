@@ -109,4 +109,7 @@ dependencies {
 
     //DataStore
     implementation(libs.androidx.datastore.preferences)
+
+    //Logging
+    implementation(libs.timber)
 }

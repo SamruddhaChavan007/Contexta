@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.handleDeeplinks
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,11 +51,11 @@ class MainActivity : ComponentActivity() {
         splashScreen.setOnExitAnimationListener { splashScreenView ->
             val iconView = splashScreenView.iconView
 
-            val scaleX = ObjectAnimator.ofFloat(iconView, android.view.View.SCALE_X, 1f, 15f)
-            val scaleY = ObjectAnimator.ofFloat(iconView, android.view.View.SCALE_Y, 1f, 15f)
+            val scaleX = ObjectAnimator.ofFloat(iconView, View.SCALE_X, 1f, 15f)
+            val scaleY = ObjectAnimator.ofFloat(iconView, View.SCALE_Y, 1f, 15f)
 
             val fadeOut =
-                ObjectAnimator.ofFloat(splashScreenView.view, android.view.View.ALPHA, 1f, 0f)
+                ObjectAnimator.ofFloat(iconView, View.ALPHA, 1f, 0f)
 
             AnimatorSet().apply {
                 interpolator = AccelerateInterpolator()
@@ -78,6 +80,7 @@ class MainActivity : ComponentActivity() {
                 ThemePreference.SYSTEM -> isSystemInDarkTheme()
             }
             ContextaTheme(darkTheme = isDark, dynamicColor = false) {
+                Timber.d("App started")
                 NavGraph()
             }
         }
