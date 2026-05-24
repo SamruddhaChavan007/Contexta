@@ -49,3 +49,15 @@ val manropeFontFamily = FontFamily(
 val robotoFontFamily = FontFamily(
     Font(R.font.roboto_medium, FontWeight.Medium)
 )
+
+val pacificoFontFamily = FontFamily(
+    Font(R.font.pacifico, FontWeight.Normal)
+)
+
+val shadowsintolightFontFamily = FontFamily(
+    Font(R.font.shadows_into_light_two_regular, FontWeight.Normal)
+)
+
+val caveatFontFamily = FontFamily(
+    Font(R.font.caveat, FontWeight.Normal)
+)

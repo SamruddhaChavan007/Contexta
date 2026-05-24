@@ -19,9 +19,11 @@ hiltNavigation = "1.2.0"
 navigationCompose = "2.8.9"
 datastore = "1.1.4"
 timber = "5.0.1"
+uiTextGoogleFonts = "1.11.0"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-compose-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt", version.ref = "bom" }
